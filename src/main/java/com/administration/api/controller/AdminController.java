@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/dahboard")
+    @GetMapping("/dashboard")
     public String adminDashboard() {
         return "Welcome Admin!";
     }

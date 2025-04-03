@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,9 +28,15 @@ public class UserService {
     @Autowired
     FunctionUtils functionUtils;
 
+    @Autowired
+    EmailService emailService;
+
+    @Transactional
     public Users registerUser(Users user) {
         user.setPassword(functionUtils.encodePassword(user.getPassword()));
-        return userRepo.save(user);
+        userRepo.save(user);
+        emailService.sendEmail(user.getEmail(), "New User Registration", "Welcome, " + user.getName() + "! You have been registered successfully");
+        return user;
     }
 
     public Optional<Users> getUserByUsername(String username) {
